@@ -42,9 +42,9 @@ Host redmi
    Port 2225
 ```
 
-Obs.: `redmi` is an alias to the server hosted in `200.17.113.231`,
+Obs.: `redmi` is an alias to the server hosted in `192.168.0.3`,
 to connect to it type `ssh redmi` in the client ssh terminal
-instead `ssh -P 2225 ismael@200.17.113.231`.
+instead `ssh -P 2225 192.168.0.3`.
 
 ## Setup a key
 
