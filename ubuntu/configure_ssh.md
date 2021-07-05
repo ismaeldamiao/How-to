@@ -37,24 +37,14 @@ Host *
    ServerAliveInterval 60
    ServerAliveCountMax 10
 
-Host if
-   hostname 200.17.113.231
-   user ismael
-   ForwardX11 yes
-   Port 22
-
-Host moto
-   hostname 192.168.0.2
-   Port 2225
-
 Host redmi
    hostname 192.168.0.3
    Port 2225
 ```
 
-Obs.: `if` is an alias to the server hosted in `200.17.113.231`,
-to connect to it type `ssh if` in the client ssh terminal
-instead `ssh -P 22 ismael@200.17.113.231`.
+Obs.: `redmi` is an alias to the server hosted in `200.17.113.231`,
+to connect to it type `ssh redmi` in the client ssh terminal
+instead `ssh -P 2225 ismael@200.17.113.231`.
 
 ## Setup a key
 
