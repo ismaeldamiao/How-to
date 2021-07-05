@@ -49,5 +49,5 @@ instead `ssh -P 2225 192.168.0.3`.
 ## Setup a key
 
 You can use keys to connect a ssh host without type the password.
-In the server type `ssh-keygen` to generate a new key and in the client
-type `ssh-copy-id -i server_alias` to copy the key.
+In the server and in the client type `ssh-keygen` to generate a new key and in the client
+type `ssh-copy-id -i server_alias` to copy the key of the server.
