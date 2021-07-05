@@ -51,7 +51,7 @@ pulseaudio --kill
 pulseaudio --start
 ```
 
-Now, start the microphone stram with `sox -c 1 -r48000 -d -t s32 -` and can pipe to `cat`, for write
+Now, start the microphone stream with `sox -c 1 -r48000 -d -t s32 -` and can pipe to `cat`, for write
 in the file `/tmp/virtmic`, in the desktop using `ssh`:
 ```bash
 sox -c 1 -r48000 -d -t s32 - | ssh -p PC_SSH_PORT PC_USER@PC_IP 'cat > /tmp/virtmic'
