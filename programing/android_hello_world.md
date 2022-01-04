@@ -6,7 +6,7 @@ a simples hello_world program for android
 
 ## Installations
 
-Firt you need the System Developer Kit (SDK),
+Firt you need the Software Developer Kit (SDK),
 the Java Developer Kit (JDK) and a key file.
 
 1. To use SDK without IDE download the `Command line tools` [here](https://developer.android.com/studio#command-tools).
