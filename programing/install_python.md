@@ -10,7 +10,6 @@ Install headers and librearies
 
 ```bash
 apt build-dep python3
-apt install -y pkg-config
 apt install -y build-essential gdb lcov pkg-config \
    libbz2-dev libffi-dev libgdbm-dev libgdbm-compat-dev liblzma-dev \
    libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev \
