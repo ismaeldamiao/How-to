@@ -2,7 +2,7 @@
 # Por Ismael Damião
 # Site: https://ismaeldamiao.github.io/
 # E-mail: ismaellxd@gmail.com
-# Última alteração: 13 de agosto de 2021
+# Última alteração: 16 de abril de 2024
 
 if tty > /dev/null; then # Executar somente em terminal interativo
 # ******************************************************************************
