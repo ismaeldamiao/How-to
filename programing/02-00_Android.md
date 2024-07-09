@@ -1,7 +1,7 @@
 # Android
 
 In this text I show how to set up the *Development Environment*
-to code for android and hot to compile and package android projects.
+to code for android and how to compile and package android projects.
 
 ## Set up
 
@@ -9,12 +9,12 @@ To code for android you NEED to get the android SDK,
 you also must have the android NDK. The most easy and less memory way
 to manage these tools is using the "Command line tools".
 
-1. **Step 0:** Command line tools
+*  **Step 0:** Command line tools
 
    Go to <https://developer.android.com/studio> and
    download the "Command line tools" for linux.
    For simplicity rename it to `commandlinetools.zip`
-   and, in the shell, go to the directory of downloaded file.
+   and, in the teeminal shell, go to the directory of downloaded file.
 
    Now unzip the `commandlinetools.zip` installing the package in the
    `Development Environment`:
@@ -33,13 +33,20 @@ to manage these tools is using the "Command line tools".
    export ANDROID_HOME="${DEV_HOME}/.packages/android"
    ```
 
-1. **Step 2:** Software development kit (SDK)
+   And reestart the shell or type:
+
+   ```sh
+   export ANDROID_HOME="${DEV_HOME}/.packages/android"
+   ```
+
+*  **Step 1:** Software development kit (SDK)
 
    You need to read the licences:
+
    ```sh
    yes | sdkmanager --sdk_root="${ANDROID_HOME}" --licenses
    ```
-   Now, the the list of availables tools with:
+   Now, see the list of availables tools with:
 
    ```sh
    sdkmanager --list --sdk_root="${ANDROID_HOME}"
@@ -48,12 +55,12 @@ to manage these tools is using the "Command line tools".
    And choosen `build-tools` and `platforms` (also `cmake`, if you already don't have) and install, e.g.,
 
    ```sh
-   sdkmanager --sdk_root="${ANDROID_HOME}" "build-tools;35.0.0"
    sdkmanager --sdk_root="${ANDROID_HOME}" "platform-tools"
+   sdkmanager --sdk_root="${ANDROID_HOME}" "build-tools;35.0.0"
    sdkmanager --sdk_root="${ANDROID_HOME}" "platforms;android-24"
    ```
 
-1. **Step 2:** Native development kit (NDK)
+*  **Step 2:** Native development kit (NDK)
 
    In a similar way, to install the NDK chossen the `ndk` and use, for example:
 
