@@ -1,51 +1,64 @@
 # Android
 
-**Step 0:** Download
+In this text I show how to set up the *Development Environment*
+to code for android and hot to compile and package android projects.
 
-Go to <https://developer.android.com/studio> and
-download the "Command line tools" for linux.
-For simplicity rename it to `commandlinetools.zip`
-and go to the directory of downloaded file.
+## Set up
 
-**Step 1:** Install the command line tools
+To code for android you NEED to get the android SDK,
+you also must have the android NDK. The most easy and less memory way
+to manage these tools is using the "Command line tools".
 
-Unzip the `commandlinetools.zip` installing the package in the
-`Development Environment`:
+1. **Step 0:** Command line tools
 
-```sh
-mkdir "$DEV_HOME/.packages/android"
-unzip commandlinetools.zip -d "$DEV_HOME/.packages/android"
-```
+   Go to <https://developer.android.com/studio> and
+   download the "Command line tools" for linux.
+   For simplicity rename it to `commandlinetools.zip`
+   and, in the shell, go to the directory of downloaded file.
 
-**Step 2:** Environment variables
+   Now unzip the `commandlinetools.zip` installing the package in the
+   `Development Environment`:
 
-```sh
-cat >> "${DEV_HOME}/env.sh" <<EOF
-# Android
-export ANDROID_HOME="\${DEV_HOME}/.packages/android"
-export PATH="\${ANDROID_HOME}/cmdline-tools/bin:\${PATH}"
+   ```sh
+   mkdir "${DEV_HOME}/.packages/android"
+   unzip commandlinetools.zip -d "$DEV_HOME/.packages/android"
+   ln -sf "{$DEV_HOME}/.packages/android/cmdline-tools/bin/sdkmanager" "${DEV_HOME}/bin/sdkmanager"
+   ```
 
-EOF
-```
+   Finally, set up the environment variable `ANDROID_HOME` in the `${DEV_HOME}/env.sh`.
+   You may use `nano` or other text editor to put in `${DEV_HOME}/env.sh` the following lines:
 
-**Step 3:** Install the SDK
+   ```sh
+   # Android
+   export ANDROID_HOME="${DEV_HOME}/.packages/android"
+   ```
 
-```sh
-. "${DEV_HOME}/env.sh"
-yes | sdkmanager --sdk_root="${ANDROID_HOME}" --licenses
-```
+1. **Step 2:** Software development kit (SDK)
 
-See the list
+   You need to read the licences:
+   ```sh
+   yes | sdkmanager --sdk_root="${ANDROID_HOME}" --licenses
+   ```
+   Now, the the list of availables tools with:
 
-```sh
-sdkmanager --list --sdk_root="${ANDROID_HOME}"
-```
+   ```sh
+   sdkmanager --list --sdk_root="${ANDROID_HOME}"
+   ```
 
-Choosen ``build-tools`, `ndk` and `platforms` (also `cmake`, if you already don't have) and install, e.g.,
+   And choosen `build-tools` and `platforms` (also `cmake`, if you already don't have) and install, e.g.,
 
-```sh
-sdkmanager --sdk_root="${ANDROID_HOME}" "build-tools;35.0.0"
-sdkmanager --sdk_root="${ANDROID_HOME}" "platform-tools"
-sdkmanager --sdk_root="${ANDROID_HOME}" "platforms;android-24"
-sdkmanager --sdk_root="${ANDROID_HOME}" "ndk;24.0.8215888"
-```
+   ```sh
+   sdkmanager --sdk_root="${ANDROID_HOME}" "build-tools;35.0.0"
+   sdkmanager --sdk_root="${ANDROID_HOME}" "platform-tools"
+   sdkmanager --sdk_root="${ANDROID_HOME}" "platforms;android-24"
+   ```
+
+1. **Step 2:** Native development kit (NDK)
+
+   In a similar way, to install the NDK chossen the `ndk` and use, for example:
+
+   ```sh
+   sdkmanager --sdk_root="${ANDROID_HOME}" "ndk;24.0.8215888"
+   ```
+
+## Coding
