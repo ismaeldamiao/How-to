@@ -69,5 +69,6 @@ cd "$DEV_HOME/.projects"
 1. Set up programing languages with the *Development Environment*
   * [C](01-00_C.md)
   * [Lua](01-01_Lua.md)
+1. Set up software packing with the *Development Environment*
+  * [Android](02-00_Android.md)
 
-* * scripts/fix.sh)*
