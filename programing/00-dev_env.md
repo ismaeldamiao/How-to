@@ -17,10 +17,10 @@ The *Development Environment* cosists of:
 * And the following conventions:
   1. The environment variable `DEV_HOME` point to a directory with permitions
      to read, write and execute.
-  1. The directory `${DEV_HOME}/bin` is reserved to symlinks to executable files.
+  1. The directory `${DEV_HOME}/include` is reserved to symlinks to the interfaces of the libraries.
   1. The directory `${DEV_HOME}/lib` is reserved to symlinks to static and shared libraries,
      and any other kind of file that contain compiled libraries.
-  1. The directory `${DEV_HOME}/include` is reserved to symlinks to the interfaces of the libraries.
+  1. The directory `${DEV_HOME}/bin` is reserved to symlinks to executable files.
   1. The directory `${DEV_HOME}/.packages` is reserved to the files of the installed packages.
   1. The directory `${DEV_HOME}/.projects` is reserved to source codes of projects.
      * Your preferred editor need to have access to `${DEV_HOME}/.projects`.
@@ -36,7 +36,7 @@ simple.
   apt install -y coreutils busybox nano
   mkdir ${HOME}/dev
   cd ${HOME}/dev
-  mkdir include bin lib .projects .packages
+  mkdir include lib bin .packages .projects
   ```
 * Using `nano`, or other editor, put crate a file `${HOME}/dev/env.sh`
   with the content:
@@ -69,6 +69,7 @@ cd "$DEV_HOME/.projects"
 1. Set up programing languages with the *Development Environment*
    * [C](01-00_C.md)
    * [Lua](01-01_Lua.md)
+   * [Java](01-01_Lua.md)
 1. Set up software packing with the *Development Environment*
    * [Android](02-00_Android.md)
 
