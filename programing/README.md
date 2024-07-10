@@ -46,10 +46,7 @@ simple.
   ```sh
   #!/usr/bin/env sh
   
-  # Set here the dev directory
-  DEV_HOME="${HOME}/dev"
-  
-  # PATH
+  export DEV_HOME="${HOME}/dev"
   export PATH="${DEV_HOME}/bin:${PATH}"
   ```
 
