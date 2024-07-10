@@ -1,68 +1,84 @@
 # Android
 
-In this text I show how to set up the *Development Environment*
+In this text I show how to set up the
+[*Development Environment*](README.md)
 to code for android and how to compile and package android projects.
 
-## Set up
+## Prerequisites
 
-To code for android you NEED to get the android SDK,
-you also must have the android NDK. The most easy and less memory way
-to manage these tools is using the "Command line tools".
+To code for Android you need to set up at least Java,
+since it's the language that the Android SDK interfaces.
+If you plan to use the Android NDK than you also need to
+set up C and/or C++.
 
-*  **Step 0:** Command line tools
+* [C](01-00_C.md)
+* [Java](01-02_Java)
 
-   Go to <https://developer.android.com/studio> and
-   download the "Command line tools" for linux.
-   For simplicity rename it to `commandlinetools.zip`
-   and, in the teeminal shell, go to the directory of downloaded file.
+You also can use the "Command line tools" to download and manage
+both, the SDK and the NKD.
 
-   Now unzip the `commandlinetools.zip` installing the package in the
-   `Development Environment`:
+1. Download it at <https://developer.android.com/studio>.
+2. Rename it to `commandlinetools.zip`.
+3. Navigate with the terminal at the directory where is placed `commandlinetools.zip`.
+4. Use the following commands to install it on the *Development Environment*:
 
    ```sh
    mkdir "${DEV_HOME}/.packages/android"
    unzip commandlinetools.zip -d "$DEV_HOME/.packages/android"
-   ln -sf "{$DEV_HOME}/.packages/android/cmdline-tools/bin/sdkmanager" "${DEV_HOME}/bin/sdkmanager"
+   ln -sf "${DEV_HOME}/.packages/android/cmdline-tools/bin/sdkmanager" "${DEV_HOME}/bin/sdkmanager"
    ```
 
-   Finally, set up the environment variable `ANDROID_HOME` in the `${DEV_HOME}/env.sh`.
-   You may use `nano` or other text editor to put in `${DEV_HOME}/env.sh` the following lines:
+5. Add the environment variable `ANDROID_HOME` in `${DEV_HOME}/env.sh`
+   using `nano` or other text editor, put on it the following content:
 
    ```sh
    # Android
    export ANDROID_HOME="${DEV_HOME}/.packages/android"
    ```
 
-   And reestart the shell or type:
+   * At this point you can reestart your terminal or can type manually
+     `export ANDROID_HOME="${DEV_HOME}/.packages/android"`.
 
-   ```sh
-   export ANDROID_HOME="${DEV_HOME}/.packages/android"
-   ```
-
-*  **Step 1:** Software development kit (SDK)
-
-   You need to read the licences:
+6. Finally, read the licences, to start using the command line tools, with the command:
 
    ```sh
    yes | sdkmanager --sdk_root="${ANDROID_HOME}" --licenses
    ```
-   Now, see the list of availables tools with:
+
+## Set up the Software development kit (SDK)
+
+To develop Android applications you need the SDK. Get it with the steps of this section.
+
+1. Chosen the version of "build tools", to see the available versions type:
 
    ```sh
    sdkmanager --list --sdk_root="${ANDROID_HOME}"
    ```
 
-   And choosen `build-tools` and `platforms` (also `cmake`, if you already don't have) and install, e.g.,
+   You can choose the latest.
+
+2. Download the "build tools" using the `sdkmanager`.
+   For example, to download the version `35.0.0` use:
 
    ```sh
-   sdkmanager --sdk_root="${ANDROID_HOME}" "platform-tools"
    sdkmanager --sdk_root="${ANDROID_HOME}" "build-tools;35.0.0"
+   ```
+
+3. Chosen the version of "platform" and install it.
+   You can see the list of available versions with the command of step 1,
+   but pay attention that only newer devices run the latest versions.
+   For example, to install the version `android 24` use:
+
+   ```sh
    sdkmanager --sdk_root="${ANDROID_HOME}" "platforms;android-24"
    ```
 
-*  **Step 2:** Native development kit (NDK)
+## Set up the Native development kit (NDK)
 
-   In a similar way, to install the NDK chossen the `ndk` and use, for example:
+1. Chosen the version of "ndk" and install it.
+   You can see the list of available versions with the command of step 1 of the SDK section,
+   but pay attention that only newer devices run the latest versions.
+   For example, to install the version `24.0.8215888` use:
 
    ```sh
    sdkmanager --sdk_root="${ANDROID_HOME}" "ndk;24.0.8215888"
