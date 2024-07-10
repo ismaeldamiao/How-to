@@ -32,14 +32,17 @@ simple.
 
 * On Debian, Ubuntu, Android (under Termux), Windows (under WSL) and others
   you can simply use the commands:
+
   ```sh
   apt install -y coreutils busybox nano
   mkdir ${HOME}/dev
   cd ${HOME}/dev
   mkdir include lib bin .packages .projects
   ```
-* Using `nano`, or other editor, put crate a file `${HOME}/dev/env.sh`
+
+* Using `nano`, or other editor, create a file `${HOME}/dev/env.sh`
   with the content:
+
   ```sh
   #!/usr/bin/env sh
   
