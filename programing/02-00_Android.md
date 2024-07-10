@@ -111,14 +111,70 @@ To develop Android applications you need the SDK. Get it with the steps of this 
 2. Compile the java files with:
 
    ```sh
-   javac -cp "$ANDROID_HOME/platforms/android-24/android.jar" $(find . -name "*.java")
-   d8 --lib "$ANDROID_HOME/platforms/android-24/android.jar" $(find . -name "*.class")
+   javac -cp "${ANDROID_HOME}/platforms/android-24/android.jar" $(find . -name "*.java")
+   d8 --lib "${ANDROID_HOME}/platforms/android-24/android.jar" $(find . -name "*.class")
    ```
 
    But pay attention, in the above command you need to use the "platforms" version that you have.
 
-3. 
+3. Package up the apk with:
 
+   ```sh
+   aapt package -f \
+      -F app.apkPart \
+      -I $ANDROID_PLATFORM/android.jar \
+      -M AndroidManifest.xml \
+      -S res/
+   zipalign -f 4 app.apkUnalign app_aligned.apk
+   apksigner sign --ks "${ANDROID_HOME}/.keystore" --out app.apk app_aligned.apk
+   ```
+
+## Coding Java apps with JNI calls
+
+## Coding native apps
+
+1. Your file structure must look like:
+
+   ```
+   .
+   ├── AndroidManifest.xml
+   ├── C
+   │   └── <C files>
+   ├── lib
+   │   └── armeabi-v7a
+   └── res
+       └── <resource files>
+   ```
+
+2. Compile the C files with:
+
+   ```sh
+   cc \
+      --target=armv7a-linux-androideabi24 \
+      -nostdinc -nostdlib \
+      -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include" \
+      -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/linux" \
+      -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/arm-linux-androideabi" \
+      -I "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue" \
+      -L "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi" \
+      --shared -o lib/armeabi-v7a/main.so \
+      "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue/android_native_app_glue.c" \
+      $(find . -name "*.c")
+   ```
+
+   But pay attention, in the above command you need to use the "platforms" version that you have.
+
+3. Package up the apk with:
+
+   ```sh
+   aapt package -f \
+      -F app.apkPart \
+      -I $ANDROID_PLATFORM/android.jar \
+      -M AndroidManifest.xml \
+      -S res/
+   zipalign -f 4 app.apkUnalign app_aligned.apk
+   apksigner sign --ks "${ANDROID_HOME}/.keystore" --out app.apk app_aligned.apk
+   ```
 
 
 
