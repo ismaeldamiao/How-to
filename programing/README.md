@@ -2,7 +2,7 @@
 
 In this text I show how to set up a development environment.
 
-The *Development Environment* is a set of conventions and utilities
+The *Development Environment* is a set of utilities and conventions
 with the purpose to facilitate the software development (libraries, applications, etc...).
 
 ## Definitions
