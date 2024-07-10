@@ -73,6 +73,15 @@ To develop Android applications you need the SDK. Get it with the steps of this 
    sdkmanager --sdk_root="${ANDROID_HOME}" "platforms;android-24"
    ```
 
+4. Make the symlinks to the utilities with:
+
+   ```sh
+   ln -sf "${ANDROID_HOME}/build-tools/35.0.0/d8" "${DEV_HOME}/bin/d8"
+   ln -sf "${ANDROID_HOME}/build-tools/35.0.0/aapt" "${DEV_HOME}/bin/aapt"
+   ln -sf "${ANDROID_HOME}/build-tools/35.0.0/zipalign" "${DEV_HOME}/bin/zipalign"
+   ln -sf "${ANDROID_HOME}/build-tools/35.0.0/apksigner" "${DEV_HOME}/bin/apksigner"
+   ```
+
 ## Set up the Native development kit (NDK)
 
 1. Chosen the version of "ndk" and install it.
@@ -84,4 +93,39 @@ To develop Android applications you need the SDK. Get it with the steps of this 
    sdkmanager --sdk_root="${ANDROID_HOME}" "ndk;24.0.8215888"
    ```
 
-## Coding
+## Coding Java apps
+
+1. Your file structure must look like:
+
+   ```
+   .
+   ├── AndroidManifest.xml
+   ├── com
+   │   └── your_company
+   │       └── app
+   │           └── <java files>
+   └── res
+       └── <resource files>
+   ```
+
+2. Compile the java files with:
+
+   ```sh
+   javac -cp "$ANDROID_HOME/platforms/android-24/android.jar" $(find . -name "*.java")
+   d8 --lib "$ANDROID_HOME/platforms/android-24/android.jar" $(find . -name "*.class")
+   ```
+
+   But pay attention, in the above command you need to use the "platforms" version that you have.
+
+3. 
+
+
+
+
+
+
+
+
+
+
+
