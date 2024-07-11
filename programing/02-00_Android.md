@@ -49,37 +49,19 @@ both, the SDK and the NKD.
 
 To develop Android applications you need the SDK. Get it with the steps of this section.
 
-1. Chosen the version of "build tools", to see the available versions type:
+1. Chosen the version of "platform", to see the available versions type:
 
    ```sh
    sdkmanager --list --sdk_root="${ANDROID_HOME}"
    ```
 
-   You can choose the latest.
+   Pay attention that only newer devices run the latest versions.
 
-2. Download the "build tools" using the `sdkmanager`.
-   For example, to download the version `35.0.0` use:
-
-   ```sh
-   sdkmanager --sdk_root="${ANDROID_HOME}" "build-tools;35.0.0"
-   ```
-
-3. Chosen the version of "platform" and install it.
-   You can see the list of available versions with the command of step 1,
-   but pay attention that only newer devices run the latest versions.
-   For example, to install the version `android 24` use:
+3. Download the "platform" using the `sdkmanager`.
+   For example, to download the version `android-24` use:
 
    ```sh
    sdkmanager --sdk_root="${ANDROID_HOME}" "platforms;android-24"
-   ```
-
-4. Make the symlinks to the utilities with:
-
-   ```sh
-   ln -sf "${ANDROID_HOME}/build-tools/35.0.0/d8" "${DEV_HOME}/bin/d8"
-   ln -sf "${ANDROID_HOME}/build-tools/35.0.0/aapt" "${DEV_HOME}/bin/aapt"
-   ln -sf "${ANDROID_HOME}/build-tools/35.0.0/zipalign" "${DEV_HOME}/bin/zipalign"
-   ln -sf "${ANDROID_HOME}/build-tools/35.0.0/apksigner" "${DEV_HOME}/bin/apksigner"
    ```
 
 ## Set up the Native development kit (NDK)
@@ -93,95 +75,126 @@ To develop Android applications you need the SDK. Get it with the steps of this 
    sdkmanager --sdk_root="${ANDROID_HOME}" "ndk;24.0.8215888"
    ```
 
-## Coding Java apps
+## Set up the Build Tools
 
-1. Your file structure must look like:
+* Using `sdkmanager`:
 
-   ```
-   .
-   ├── AndroidManifest.xml
-   ├── com
-   │   └── your_company
-   │       └── app
-   │           └── <java files>
-   └── res
-       └── <resource files>
-   ```
+  1. If your processor are `x86_64` then you can use the `sdkmanager` to
+     download the `bluid-tools`. See the available versions like in step 1
+     from the SDK section, chosen the latest version and download it.
+     For example, to download the version `35.0.0` use:
 
-2. Compile the java files with:
+     ```sh
+     sdkmanager --sdk_root="${ANDROID_HOME}" "build-tools;35.0.0"
+     ```
 
-   ```sh
-   javac -cp "${ANDROID_HOME}/platforms/android-24/android.jar" $(find . -name "*.java")
-   d8 --lib "${ANDROID_HOME}/platforms/android-24/android.jar" $(find . -name "*.class")
-   ```
+  2. Make the symlinks to the utilities with:
 
-   But pay attention, in the above command you need to use the "platforms" version that you have.
+     ```sh
+     ln -sf "${ANDROID_HOME}/build-tools/35.0.0/d8" "${DEV_HOME}/bin/d8"
+     ln -sf "${ANDROID_HOME}/build-tools/35.0.0/aapt" "${DEV_HOME}/bin/aapt"
+     ln -sf "${ANDROID_HOME}/build-tools/35.0.0/zipalign" "${DEV_HOME}/bin/zipalign"
+     ln -sf "${ANDROID_HOME}/build-tools/35.0.0/apksigner" "${DEV_HOME}/bin/apksigner"
+     ```
+* Using the application manager:
 
-3. Package up the apk with:
+  1. You can search how to download the tools `d8`, `aapt`, `zipalign` and `apksigner`
+     for you distribution, if you have a architecture other than `x86_64`.
+     For example you can try:
 
-   ```sh
-   aapt package -f \
-      -F app.apkPart \
-      -I $ANDROID_PLATFORM/android.jar \
-      -M AndroidManifest.xml \
-      -S res/
-   zipalign -f 4 app.apkUnalign app_aligned.apk
-   apksigner sign --ks "${ANDROID_HOME}/.keystore" --out app.apk app_aligned.apk
-   ```
+     ```sh
+     apt install d8 aapt zipalign apksigner
+     ```
 
-## Coding Java apps with JNI calls
+## Coding Android apps
 
-## Coding native apps
+For the purposes of this tutorial the projects for android
+have a directory structure like this:
 
-1. Your file structure must look like:
+```
+.
+├── CMakeLists.txt
+├── LICENSE
+├── README.md
+└── src
+    ├── AndroidManifest.xml
+    ├── c
+    │   └── <c files>
+    ├── java
+    │   └── <java files>
+    └── res
+        └── <resource files>
+```   
 
-   ```
-   .
-   ├── AndroidManifest.xml
-   ├── C
-   │   └── <C files>
-   ├── lib
-   │   └── armeabi-v7a
-   └── res
-       └── <resource files>
-   ```
+To facilitate the build I also recommend to put in the root directory
+a copy of the `SDK` and the `NKD` necessary to compile the code,
+this may look like this:
 
-2. Compile the C files with:
+```
+.
+├── CMakeLists.txt
+├── LICENSE
+├── README.md
+├── dep
+│   ├── android.jar
+│   ├── native_app_glue
+│   └── sysroot
+└── src
+    ├── AndroidManifest.xml
+    ├── c
+    │   └── <c files>
+    ├── java
+    │   └── <java files>
+    └── res
+```
 
-   ```sh
-   cc \
-      --target=armv7a-linux-androideabi24 \
-      -nostdinc -nostdlib \
-      -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include" \
-      -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/linux" \
-      -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/arm-linux-androideabi" \
-      -I "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue" \
-      -L "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi" \
-      --shared -o lib/armeabi-v7a/main.so \
-      "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue/android_native_app_glue.c" \
-      $(find . -name "*.c")
-   ```
+Where the commands to copy the dependencies are:
 
-   But pay attention, in the above command you need to use the "platforms" version that you have.
+```sh
+cp "${ANDROID_HOME}/platforms/android-24/android.jar" dep/android.jar
+cp -R "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot" dep/sysroot
+cp -R "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue" dep/native_app_glue
+```
 
-3. Package up the apk with:
+## Compiling
 
-   ```sh
-   aapt package -f \
-      -F app.apkPart \
-      -I $ANDROID_PLATFORM/android.jar \
-      -M AndroidManifest.xml \
-      -S res/
-   zipalign -f 4 app.apkUnalign app_aligned.apk
-   apksigner sign --ks "${ANDROID_HOME}/.keystore" --out app.apk app_aligned.apk
-   ```
+If your code use java than java source files can be compiled with:
 
+```sh
+mkdir -p build/apk
+javac -cp "dep/android.jar" $(find . -name "*.java")
+d8 --output build/apk/ --lib "dep/android.jar" $(find . -name "*.class")
+```
 
+If your code use c than c source files can be compiled with:
 
+```sh
+cc \
+   --target=armv7a-linux-androideabi24 \
+   -nostdinc -nostdlib \
+   -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include" \
+   -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/linux" \
+   -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/arm-linux-androideabi" \
+   -I "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue" \
+   -L "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi" \
+   --shared -o lib/armeabi-v7a/main.so \
+   "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue/android_native_app_glue.c" \
+   $(find . -name "*.c")
+```
 
+## Packing
 
+To package up your application, after the compilation step, use
 
-
-
-
+```sh
+aapt package -f \
+   -F build/app_unsigned_unalign.apk \
+   -I dep/android.jar \
+   -M src/AndroidManifest.xml \
+   -S src/res/ \
+   build/apk/
+zipalign -f 4 build/app_unsigned_unalign.apk build/app_unsigned.apk
+apksigner sign --ks "${ANDROID_HOME}/.keystore" --out build/app.apk build/app_unsigned.apk
+```
+## Read more
 
