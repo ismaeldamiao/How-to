@@ -196,5 +196,9 @@ aapt package -f \
 zipalign -f 4 build/app_unsigned_unalign.apk build/app_unsigned.apk
 apksigner sign --ks "${ANDROID_HOME}/.keystore" --out build/app.apk build/app_unsigned.apk
 ```
+
+## Using CMake
+
+
 ## Read more
 
