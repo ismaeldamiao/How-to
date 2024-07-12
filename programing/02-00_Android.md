@@ -39,11 +39,18 @@ both, the SDK and the NKD.
    * At this point you can reestart your terminal or can type manually
      `export ANDROID_HOME="${DEV_HOME}/.packages/android"`.
 
-6. Finally, read the licences, to start using the command line tools, with the command:
+6. Read the licences, to start using the command line tools, with the command:
 
    ```sh
    yes | sdkmanager --sdk_root="${ANDROID_HOME}" --licenses
    ```
+
+7. You need to generarate a key, you can use the Java keytool:
+
+   ```sh
+   keytool -genkeypair -keystore "${ANDROID_HOME}/.keystore" -keyalg RSA
+   ```
+
 
 ## Set up the Software development kit (SDK)
 
@@ -148,39 +155,68 @@ this may look like this:
     └── res
 ```
 
-Where the commands to copy the dependencies are:
+Where the commands to copy the dependencies are like:
 
 ```sh
 cp "${ANDROID_HOME}/platforms/android-24/android.jar" dep/android.jar
-cp -R "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot" dep/sysroot
-cp -R "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue" dep/native_app_glue
 ```
 
 ## Compiling
 
-If your code use java than java source files can be compiled with:
+First prepare the `build` directory:
 
 ```sh
 mkdir -p build/apk
-javac -cp "dep/android.jar" $(find . -name "*.java")
-d8 --output build/apk/ --lib "dep/android.jar" $(find . -name "*.class")
+# If you use C or C++:
+mkdir -p build/apk/lib/{armeabi-v7a,aarch64-v8a,x86,x86_64}
 ```
 
-If your code use c than c source files can be compiled with:
+1. If your code use java, java source files can be compiled with:
 
-```sh
-cc \
-   --target=armv7a-linux-androideabi24 \
-   -nostdinc -nostdlib \
-   -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include" \
-   -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/linux" \
-   -I "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/arm-linux-androideabi" \
-   -I "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue" \
-   -L "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi" \
-   --shared -o lib/armeabi-v7a/main.so \
-   "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue/android_native_app_glue.c" \
-   $(find . -name "*.c")
-```
+   ```sh
+   javac -cp "dep/android.jar" $(find . -name "*.java")
+   d8 --output build/apk/ --lib "dep/android.jar" $(find . -name "*.class")
+   ```
+
+2. If your code use c, c source files can be compiled with:
+
+   ```sh
+   # Solve dependencies with:
+   cp -R "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot" dep/sysroot
+   # Or With:
+   ln -sf "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr" dep/sysroot
+   mkdir -p build/apk/lib/armeabi-v7a
+   # Then Compile with:
+   ```
+
+**Compiling libraries:**
+
+* `android_native_app_glue`:
+
+   ```sh
+   # Solve dependencies with:
+   cp -R "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue" dep/native_app_glue
+   cp -R "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/14.0.1" dep/clang
+   # Or with:
+   ln -sf "${ANDROID_HOME}/ndk/24.0.8215888/sources/android/native_app_glue" dep/native_app_glue
+   ln -sf "${ANDROID_HOME}/ndk/24.0.8215888/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/14.0.1" dep/clang
+   # Then compile with:
+   clang -c \
+      --target=armv7a-linux-androideabi24 \
+      --sysroot="dep/sysroot/usr" \
+      -I "dep/sysroot/usr/include/arm-linux-androideabi" \
+      -o build/libandroid_native_app_glue.o \
+      "dep/native_app_glue/android_native_app_glue.c"
+   # And link with:
+   clang \
+      --target=armv7a-linux-androideabi24 \
+      -nostdlib --sysroot="dep/sysroot/usr" \
+      --shared -o build/apk/lib/armeabi-v7a/libandroid_native_app_glue.so \
+      dep/sysroot/usr/lib/arm-linux-androideabi/24/crtbegin_so.o \
+      build/libandroid_native_app_glue.o \
+      dep/clang/lib/linux/arm/libunwind.a \
+      dep/sysroot/usr/lib/arm-linux-androideabi/24/crtend_so.o
+   ```
 
 ## Packing
 
